@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ticket Booking Demo</title>
+</head>
+<body>
+  <h1>🎟️ Ticket Booking System</h1>
+  <button onclick="viewSeats()">View Seats</button>
+  <br><br>
+  <label>Seat ID: <input id="seatId" type="number" min="1" max="10"></label>
+  <label>User ID: <input id="userId" type="text"></label>
+  <button onclick="lockSeat()">Lock Seat</button>
+  <button onclick="confirmSeat()">Confirm Seat</button>
+  <pre id="output"></pre>
+
+  <script>
+    const API = "http://localhost:3000";
+
+    async function viewSeats() {
+      let res = await fetch(`${API}/seats`);
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function lockSeat() {
+      const seatId = document.getElementById("seatId").value;
+      const userId = document.getElementById("userId").value;
+      let res = await fetch(`${API}/lock`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ seatId, userId })
+      });
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function confirmSeat() {
+      const seatId = document.getElementById("seatId").value;
+      const userId = document.getElementById("userId").value;
+      let res = await fetch(`${API}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ seatId, userId })
+      });
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>

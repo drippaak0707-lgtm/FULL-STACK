@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Manager</title>
+</head>
+<body>
+  <h1>👨‍💼 Employee Manager</h1>
+
+  <h3>Add Employee</h3>
+  <label>ID: <input type="text" id="empId"></label>
+  <label>Name: <input type="text" id="empName"></label>
+  <button onclick="addEmployee()">Add</button>
+
+  <h3>Employees List</h3>
+  <button onclick="listEmployees()">Refresh List</button>
+  <ul id="employeeList"></ul>
+
+  <h3>Remove Employee</h3>
+  <label>ID: <input type="text" id="removeId"></label>
+  <button onclick="removeEmployee()">Remove</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    const API = "http://localhost:3000";
+
+    async function listEmployees() {
+      let res = await fetch(`${API}/employees`);
+      let data = await res.json();
+      const list = document.getElementById("employeeList");
+      list.innerHTML = "";
+      data.employees.forEach(emp => {
+        let li = document.createElement("li");
+        li.textContent = `ID: ${emp.id}, Name: ${emp.name}`;
+        list.appendChild(li);
+      });
+    }
+
+    async function addEmployee() {
+      const id = document.getElementById("empId").value;
+      const name = document.getElementById("empName").value;
+      let res = await fetch(`${API}/employees`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, name })
+      });
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+      listEmployees();
+    }
+
+    async function removeEmployee() {
+      const id = document.getElementById("removeId").value;
+      let res = await fetch(`${API}/employees/${id}`, { method: "DELETE" });
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+      listEmployees();
+    }
+
+    // Load employees initially
+    listEmployees();
+  </script>
+</body>
+</html>

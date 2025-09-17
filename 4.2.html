@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Playing Card Collection</title>
+</head>
+<body>
+  <h1>🃏 Playing Card Collection</h1>
+
+  <button onclick="listCards()">List All Cards</button>
+  <br><br>
+
+  <h3>Add a Card</h3>
+  <label>Suit: <input id="suit" type="text"></label>
+  <label>Value: <input id="value" type="text"></label>
+  <button onclick="addCard()">Add</button>
+  <br><br>
+
+  <h3>Get a Card</h3>
+  <label>ID: <input id="getId" type="number"></label>
+  <button onclick="getCard()">Get</button>
+  <br><br>
+
+  <h3>Delete a Card</h3>
+  <label>ID: <input id="deleteId" type="number"></label>
+  <button onclick="deleteCard()">Delete</button>
+  <br><br>
+
+  <pre id="output"></pre>
+
+  <script>
+    const API = "http://localhost:3000";
+
+    async function listCards() {
+      let res = await fetch(`${API}/cards`);
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function addCard() {
+      const suit = document.getElementById("suit").value;
+      const value = document.getElementById("value").value;
+      let res = await fetch(`${API}/cards`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ suit, value })
+      });
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function getCard() {
+      const id = document.getElementById("getId").value;
+      let res = await fetch(`${API}/cards/${id}`);
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function deleteCard() {
+      const id = document.getElementById("deleteId").value;
+      let res = await fetch(`${API}/cards/${id}`, { method: "DELETE" });
+      let data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
