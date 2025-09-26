@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JavaScript Class Inheritance — Person, Student, Teacher</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 24px; background:#f7f8fb; color:#111 }
+    .card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 6px 18px rgba(14,20,30,0.08); max-width:720px; margin-bottom:16px }
+    h1 { margin: 0 0 8px 0 }
+    pre { background:#0b1220; color:#dff0ff; padding:12px; border-radius:8px; overflow:auto }
+    button { padding:8px 12px; border-radius:8px; border:1px solid #d0d7de; background:#fff; cursor:pointer }
+    .output { margin-top:12px; font-family:monospace; white-space:pre-wrap }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Person → Student & Teacher (ES6 classes)</h1>
+    <p>This demo shows a <strong>base Person</strong> class and two subclasses (<em>Student</em>, <em>Teacher</em>) that extend it. Each subclass extends or overrides the <code>displayInfo</code> method to include its own properties.</p>
+    <button id="runDemo">Run demo (create instances)</button>
+    <div class="output" id="output" aria-live="polite"></div>
+  </div>
+
+  <div class="card">
+    <h2>Source (important parts)</h2>
+    <pre>// Base class
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  // method to return a basic description
+  displayInfo() {
+    return `Name: ${this.name} | Age: ${this.age}`;
+  }
+}
+
+// Student extends Person
+class Student extends Person {
+  constructor(name, age, course) {
+    super(name, age);
+    this.course = course;
+  }
+
+  // override to add course information
+  displayInfo() {
+    // call the parent method and extend
+    return `${super.displayInfo()} | Course: ${this.course}`;
+  }
+}
+
+// Teacher extends Person
+class Teacher extends Person {
+  constructor(name, age, subject) {
+    super(name, age);
+    this.subject = subject;
+  }
+
+  // override to add subject/department information
+  displayInfo() {
+    return `${super.displayInfo()} | Subject: ${this.subject}`;
+  }
+}
+
+// usage: create instances and call displayInfo()
+const s = new Student('Aisha', 20, 'Computer Science');
+const t = new Teacher('Mr. Rao', 42, 'Mathematics');
+
+console.log(s.displayInfo());
+console.log(t.displayInfo());
+</pre>
+  </div>
+
+  <script>
+    // JavaScript classes used in this page
+    class Person {
+      constructor(name, age) {
+        this.name = name;
+        this.age = age;
+      }
+
+      displayInfo() {
+        return `Name: ${this.name} | Age: ${this.age}`;
+      }
+    }
+
+    class Student extends Person {
+      constructor(name, age, course) {
+        super(name, age);
+        this.course = course;
+      }
+
+      displayInfo() {
+        // extend the parent behaviour
+        return `${super.displayInfo()} | Course: ${this.course}`;
+      }
+
+      // student-only method
+      study() {
+        return `${this.name} is studying ${this.course}.`;
+      }
+    }
+
+    class Teacher extends Person {
+      constructor(name, age, subject) {
+        super(name, age);
+        this.subject = subject;
+      }
+
+      displayInfo() {
+        return `${super.displayInfo()} | Subject: ${this.subject}`;
+      }
+
+      // teacher-only method
+      teach() {
+        return `${this.name} is teaching ${this.subject}.`;
+      }
+    }
+
+    // Demo runner
+    document.getElementById('runDemo').addEventListener('click', () => {
+      const out = document.getElementById('output');
+      // create instances
+      const student = new Student('Aisha', 20, 'Computer Science');
+      const teacher = new Teacher('Mr. Rao', 42, 'Mathematics');
+
+      // show the results of calling methods
+      const lines = [
+        '// Instances created',
+        `student instanceof Student: ${student instanceof Student}`,
+        `student instanceof Person: ${student instanceof Person}`,
+        `teacher instanceof Teacher: ${teacher instanceof Teacher}`,
+        `teacher instanceof Person: ${teacher instanceof Person}`,
+        '',
+        '// Calling displayInfo() (overridden method):',
+        `Student.displayInfo(): ${student.displayInfo()}`,
+        `Teacher.displayInfo(): ${teacher.displayInfo()}`,
+        '',
+        '// Calling subclass-only methods:',
+        student.study(),
+        teacher.teach(),
+        '',
+        '// Demonstrate polymorphism: treat both as Person',
+        'function printPersonInfo(person) { return person.displayInfo(); }',
+        `printPersonInfo(student): ${ (function(person){ return person.displayInfo(); })(student) }`,
+        `printPersonInfo(teacher): ${ (function(person){ return person.displayInfo(); })(teacher) }`
+      ];
+
+      out.textContent = lines.join('\n');
+
+      // also log to console
+      console.log('--- demo output ---');
+      lines.forEach(l => console.log(l));
+    });
+  </script>
+</body>
+</html>
