@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Cards</title>
+  <!-- Tailwind CSS (for styling, optional) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div id="root"></div>
+
+  <!-- React & ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- React Code -->
+  <script type="text/babel">
+    const ProductCard = ({ name, price, inStock }) => {
+      return (
+        <div className="max-w-sm p-4 rounded-2xl shadow-md border bg-white">
+          <h2 className="text-xl font-semibold mb-2">{name}</h2>
+          <p className="text-gray-700">Price: <span className="font-medium">₹{price}</span></p>
+          <p className={`mt-2 font-medium ${inStock ? "text-green-600" : "text-red-600"}`}>
+            {inStock ? "In Stock" : "Out of Stock"}
+          </p>
+        </div>
+      );
+    };
+
+    const App = () => {
+      const products = [
+        { name: "Wireless Earbuds", price: 1999, inStock: true },
+        { name: "Gaming Laptop", price: 79999, inStock: false },
+        { name: "Smartphone", price: 24999, inStock: true },
+      ];
+
+      return (
+        <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
+          {products.map((product, index) => (
+            <ProductCard
+              key={index}
+              name={product.name}
+              price={product.price}
+              inStock={product.inStock}
+            />
+          ))}
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
